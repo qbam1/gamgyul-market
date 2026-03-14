@@ -1,0 +1,98 @@
+/* =========================
+   Post Write
+========================= */
+
+.post-write-page{
+  position: relative;
+  min-height: calc(100vh - var(--header-h));
+  padding: 20px 16px 100px;
+  background: #fff;
+}
+
+.post-write-box{
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.post-write-profile{
+  flex: 0 0 42px;
+}
+
+.post-write-profile__img{
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--gray-100);
+}
+
+.post-write-content{
+  flex: 1;
+  min-width: 0;
+}
+
+.post-write-content__textarea{
+  width: 100%;
+  min-height: 160px;
+  border: none;
+  outline: none;
+  resize: none;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #333;
+  font-family: inherit;
+}
+
+.post-write-content__textarea::placeholder{
+  color: var(--gray-500);
+}
+
+.post-write-content__preview{
+  margin-top: 12px;
+}
+
+.post-write-content__preview-img{
+  width: 100%;
+  border-radius: 10px;
+  display: block;
+}
+
+/* 이미지 버튼 */
+.post-write-image-btn{
+  position: fixed;
+  left: 50%;
+  transform: translateX(calc(-50% + 155px));
+  bottom: 90px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: var(--orange);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  max-width: 390px;
+}
+
+.post-write-image-btn img{
+  width: 24px;
+  height: 24px;
+  display: block;
+}
+
+/* 업로드 버튼 */
+.post-upload-btn{
+  border: none;
+  background: #ffc7a7;
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 7px 14px;
+  border-radius: 32px;
+  cursor: pointer;
+}
+
+.post-upload-btn--active{
+  background: var(--orange);
+}

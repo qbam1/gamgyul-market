@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>감귤마켓 | 채팅 목록</title>
+  <link rel="stylesheet" href="../css/reset.css" />
+  <link rel="stylesheet" href="../css/common.css" />
+  <link rel="stylesheet" href="../css/page.css" />
+</head>
+<body class="page">
+  <div class="app">
+
+    <!-- 헤더 -->
+    <header class="top-header">
+      <div class="top-header__left"></div>
+
+      <h1 class="top-header__title">채팅</h1>
+
+      <div class="top-header__right"></div>
+    </header>
+
+    <main class="content chat-list-page">
+
+      <section class="chat-list-wrap">
+        <a class="chat-item" href="./chat-room.html">
+          <div class="chat-item__avatar-wrap">
+            <img class="chat-item__avatar" src="../assets/logo/symbol-logo.png" alt="">
+            <span class="chat-item__badge"></span>
+          </div>
+
+          <div class="chat-item__content">
+            <div class="chat-item__top">
+              <p class="chat-item__name">애월읍 위니브 감귤농장</p>
+              <span class="chat-item__date">2020.10.25</span>
+            </div>
+            <p class="chat-item__message">이번에 정정 언제하맨 마씸?</p>
+          </div>
+        </a>
+
+        <a class="chat-item" href="./chat-room.html">
+          <div class="chat-item__avatar-wrap">
+            <img class="chat-item__avatar" src="../assets/logo/symbol-logo.png" alt="">
+          </div>
+
+          <div class="chat-item__content">
+            <div class="chat-item__top">
+              <p class="chat-item__name">제주 감귤 직거래</p>
+              <span class="chat-item__date">2020.10.24</span>
+            </div>
+            <p class="chat-item__message">감귤 5kg 남아있나요?</p>
+          </div>
+        </a>
+
+        <a class="chat-item" href="./chat-room.html">
+          <div class="chat-item__avatar-wrap">
+            <img class="chat-item__avatar" src="../assets/logo/symbol-logo.png" alt="">
+          </div>
+
+          <div class="chat-item__content">
+            <div class="chat-item__top">
+              <p class="chat-item__name">한라봉마켓</p>
+              <span class="chat-item__date">2020.10.23</span>
+            </div>
+            <p class="chat-item__message">좋은 하루 되세요 🍊</p>
+          </div>
+        </a>
+      </section>
+
+    </main>
+
+    <!-- 하단 탭 -->
+    <nav class="tabbar" aria-label="하단 탭 메뉴">
+      <a class="tabbar__item" href="./home.html" aria-label="홈">
+        <img src="../assets/icons/icon-home.svg" alt="">
+        <span>홈</span>
+      </a>
+
+      <a class="tabbar__item tabbar__item--active" href="./chat-list.html" aria-label="채팅">
+        <img src="../assets/icons/icon-message-circle-fill.svg" alt="">
+        <span>채팅</span>
+      </a>
+
+      <a class="tabbar__item tabbar__item--plus" href="./post-add.html" aria-label="게시글 작성">
+        <img src="../assets/icons/icon-edit.svg" alt="">
+      </a>
+
+      <a class="tabbar__item" href="./profile.html" aria-label="프로필">
+        <img src="../assets/icons/icon-user.svg" alt="">
+        <span>프로필</span>
+      </a>
+    </nav>
+
+  </div>
+</body>
+</html>

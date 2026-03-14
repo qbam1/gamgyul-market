@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>댓글</title>
+
+  <link rel="stylesheet" href="../css/reset.css">
+  <link rel="stylesheet" href="../css/common.css">
+  <link rel="stylesheet" href="../css/page.css">
+</head>
+<body class="page">
+
+  <div class="app">
+
+    <!-- 헤더 -->
+    <header class="top-header">
+
+      <div class="top-header__left">
+        <button class="icon-btn" type="button" onclick="history.back()" aria-label="뒤로가기">
+          <img src="../assets/icons/icon-arrow-left.svg" alt="">
+        </button>
+      </div>
+
+      <h1 class="top-header__title">댓글</h1>
+
+      <div class="top-header__right"></div>
+
+    </header>
+
+    <main class="comment-page">
+
+      <section class="comment-list">
+
+        <article class="comment-item">
+          <img class="comment-item__avatar" src="../assets/logo/symbol-logo.png" alt="프로필 이미지">
+
+          <div class="comment-item__content">
+            <div class="comment-item__top">
+              <p class="comment-item__name">애월읍 위니브 감귤농장</p>
+              <span class="comment-item__date">2020.10.25</span>
+              <button class="icon-btn comment-item__more" type="button" aria-label="더보기">
+                <img src="../assets/icons/s-icon-more-vertical.svg" alt="">
+              </button>
+            </div>
+
+            <p class="comment-item__text">
+              너무 맛있어 보여요! 🍊
+            </p>
+          </div>
+        </article>
+
+        <article class="comment-item">
+          <img class="comment-item__avatar" src="../assets/logo/symbol-logo.png" alt="프로필 이미지">
+
+          <div class="comment-item__content">
+            <div class="comment-item__top">
+              <p class="comment-item__name">제주 감귤 직거래</p>
+              <span class="comment-item__date">2020.10.24</span>
+              <button class="icon-btn comment-item__more" type="button" aria-label="더보기">
+                <img src="../assets/icons/s-icon-more-vertical.svg" alt="">
+              </button>
+            </div>
+
+            <p class="comment-item__text">
+              주문 가능한가요?
+            </p>
+          </div>
+        </article>
+
+      </section>
+
+    </main>
+
+    <!-- 댓글 입력 -->
+    <div class="comment-input-bar">
+      <img class="comment-input-bar__avatar" src="../assets/logo/symbol-logo.png" alt="내 프로필 이미지">
+      <input id="commentInput" class="comment-input-bar__input" type="text" placeholder="댓글 입력하기...">
+      <button id="commentSubmitBtn" class="comment-input-bar__btn" type="button">게시</button>
+    </div>
+
+  </div>
+
+  <script>
+    const commentInput = document.getElementById("commentInput");
+    const commentSubmitBtn = document.getElementById("commentSubmitBtn");
+
+    function updateCommentBtn() {
+      if (commentInput.value.trim().length > 0) {
+        commentSubmitBtn.classList.add("comment-input-bar__btn--active");
+      } else {
+        commentSubmitBtn.classList.remove("comment-input-bar__btn--active");
+      }
+    }
+
+    commentInput.addEventListener("input", updateCommentBtn);
+    updateCommentBtn();
+  </script>
+
+</body>
+</html>

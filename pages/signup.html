@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>회원가입</title>
+
+  <link rel="stylesheet" href="../css/reset.css">
+  <link rel="stylesheet" href="../css/common.css">
+  <link rel="stylesheet" href="../css/page.css">
+</head>
+<body class="page">
+
+  <div class="app">
+
+    <!-- 헤더 -->
+    <header class="top-header">
+
+      <div class="top-header__left">
+        <button class="icon-btn" type="button" onclick="history.back()" aria-label="뒤로가기">
+          <img src="../assets/icons/icon-arrow-left.svg" alt="">
+        </button>
+      </div>
+
+      <h1 class="top-header__title">이메일로 회원가입</h1>
+
+      <div class="top-header__right"></div>
+
+    </header>
+
+    <main class="signup-page">
+
+      <section class="signup-form">
+
+        <div class="signup-field">
+          <label class="signup-label" for="signupEmail">이메일</label>
+          <input id="signupEmail" class="signup-input" type="email" placeholder="이메일 주소를 입력해 주세요.">
+          <p class="signup-error" id="signupEmailHelper"></p>
+        </div>
+
+        <div class="signup-field">
+          <label class="signup-label" for="signupPw">비밀번호</label>
+          <input id="signupPw" class="signup-input" type="password" placeholder="비밀번호는 6자 이상 입력해 주세요.">
+          <p class="signup-error" id="signupPwHelper"></p>
+        </div>
+
+        <button class="signup-next-btn" id="nextBtn" type="button">다음</button>
+
+      </section>
+
+    </main>
+
+  </div>
+
+  <script src="../js/api.js"></script>
+
+  <script>
+    const signupEmail = document.getElementById("signupEmail");
+    const signupPw = document.getElementById("signupPw");
+    const signupEmailHelper = document.getElementById("signupEmailHelper");
+    const signupPwHelper = document.getElementById("signupPwHelper");
+    const nextBtn = document.getElementById("nextBtn");
+
+    function validateSignupForm() {
+      let valid = true;
+
+      signupEmailHelper.textContent = "";
+      signupPwHelper.textContent = "";
+
+      const emailVal = signupEmail.value.trim();
+      const pwVal = signupPw.value.trim();
+
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      if (!emailRegex.test(emailVal)) {
+        signupEmailHelper.textContent = "올바른 이메일 형식을 입력해 주세요.";
+        valid = false;
+      }
+
+      if (pwVal.length < 6) {
+        signupPwHelper.textContent = "비밀번호는 6자 이상 입력해 주세요.";
+        valid = false;
+      }
+
+      if (valid) {
+        nextBtn.classList.add("signup-next-btn--active");
+      } else {
+        nextBtn.classList.remove("signup-next-btn--active");
+      }
+
+      return valid;
+    }
+
+    signupEmail.addEventListener("input", validateSignupForm);
+    signupPw.addEventListener("input", validateSignupForm);
+
+    signupEmail.addEventListener("blur", validateSignupForm);
+    signupPw.addEventListener("blur", validateSignupForm);
+
+    nextBtn.addEventListener("click", async () => {
+      if (!validateSignupForm()) return;
+
+      const emailVal = signupEmail.value.trim();
+      const pwVal = signupPw.value.trim();
+
+      try {
+        const res = await apiRequest("/user/emailvalid", {
+          method: "POST",
+          body: {
+            user: {
+              email: emailVal
+            }
+          }
+        });
+
+        if (String(res?.message || "").includes("이미 가입된")) {
+          signupEmailHelper.textContent = "이미 가입된 이메일 주소입니다.";
+          return;
+        }
+
+        sessionStorage.setItem("signup_email", emailVal);
+        sessionStorage.setItem("signup_pw", pwVal);
+
+        location.href = "./signup-profile.html";
+
+      } catch (error) {
+        signupEmailHelper.textContent = error?.message || "이메일 확인 중 오류가 발생했습니다.";
+      }
+    });
+
+    validateSignupForm();
+  </script>
+
+</body>
+</html>

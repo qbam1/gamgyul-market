@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>이메일 로그인</title>
+
+  <link rel="stylesheet" href="../css/reset.css">
+  <link rel="stylesheet" href="../css/common.css">
+  <link rel="stylesheet" href="../css/page.css">
+</head>
+<body class="page">
+
+  <div class="app">
+
+    <!-- 헤더 -->
+    <header class="top-header">
+
+      <div class="top-header__left">
+        <button class="icon-btn" type="button" onclick="history.back()" aria-label="뒤로가기">
+          <img src="../assets/icons/icon-arrow-left.svg" alt="">
+        </button>
+      </div>
+
+      <h1 class="top-header__title">이메일 로그인</h1>
+
+      <div class="top-header__right"></div>
+
+    </header>
+
+    <main class="login-email-page">
+
+      <section class="login-email-form">
+
+        <div class="login-email-field">
+          <label class="login-email-label" for="email">이메일</label>
+          <input id="email" class="login-email-input" type="email" placeholder="이메일 주소를 입력해 주세요." required>
+          <p class="login-email-error" id="emailHelper"></p>
+        </div>
+
+        <div class="login-email-field">
+          <label class="login-email-label" for="pw">비밀번호</label>
+          <input id="pw" class="login-email-input" type="password" placeholder="비밀번호를 입력해 주세요." required>
+          <p class="login-email-error" id="pwHelper"></p>
+        </div>
+
+        <button class="login-email-submit" id="loginBtn" type="button">로그인</button>
+
+      </section>
+
+    </main>
+
+  </div>
+
+  <script src="../js/api.js"></script>
+
+  <script>
+    const email = document.getElementById("email");
+    const pw = document.getElementById("pw");
+    const emailHelper = document.getElementById("emailHelper");
+    const pwHelper = document.getElementById("pwHelper");
+    const loginBtn = document.getElementById("loginBtn");
+
+    // 회원가입 후 이메일 자동 채우기
+    const prefill = sessionStorage.getItem("prefill_email");
+    if (prefill) {
+      email.value = prefill;
+      sessionStorage.removeItem("prefill_email");
+    }
+
+    function validateForm() {
+      let valid = true;
+
+      emailHelper.textContent = "";
+      pwHelper.textContent = "";
+
+      const emailVal = email.value.trim();
+      const pwVal = pw.value.trim();
+
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      if (!emailRegex.test(emailVal)) {
+        emailHelper.textContent = "올바른 이메일 형식을 입력해 주세요.";
+        valid = false;
+      }
+
+      if (pwVal.length < 1) {
+        pwHelper.textContent = "비밀번호를 입력해 주세요.";
+        valid = false;
+      }
+
+      if (valid) {
+        loginBtn.classList.add("login-email-submit--active");
+      } else {
+        loginBtn.classList.remove("login-email-submit--active");
+      }
+
+      return valid;
+    }
+
+    email.addEventListener("input", validateForm);
+    pw.addEventListener("input", validateForm);
+
+    loginBtn.addEventListener("click", async () => {
+      if (!validateForm()) return;
+
+      const emailVal = email.value.trim();
+      const pwVal = pw.value.trim();
+
+      try {
+        const result = await apiRequest("/user/login", {
+          method: "POST",
+          body: {
+            user: {
+              email: emailVal,
+              password: pwVal
+            }
+          }
+        });
+
+        const token =
+          result?.user?.token ||
+          result?.token ||
+          result?.user?.accessToken ||
+          result?.accessToken;
+
+        if (!token) {
+          throw new Error("로그인은 되었지만 토큰을 찾지 못했습니다.");
+        }
+
+        setToken(token);
+        location.replace("./home.html");
+
+      } catch (err) {
+        pwHelper.textContent = err?.message || "이메일 또는 비밀번호가 일치하지 않습니다.";
+      }
+    });
+
+    validateForm();
+  </script>
+
+</body>
+</html>

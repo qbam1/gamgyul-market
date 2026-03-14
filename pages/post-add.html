@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>게시글 작성</title>
+
+  <link rel="stylesheet" href="../css/reset.css">
+  <link rel="stylesheet" href="../css/common.css">
+  <link rel="stylesheet" href="../css/page.css">
+</head>
+<body class="page">
+
+  <div class="app">
+
+    <!-- 헤더 -->
+    <header class="top-header">
+
+      <div class="top-header__left">
+        <button class="icon-btn" type="button" onclick="history.back()" aria-label="뒤로가기">
+          <img src="../assets/icons/icon-arrow-left.svg" alt="">
+        </button>
+      </div>
+
+      <h1 class="top-header__title">게시글 작성</h1>
+
+      <div class="top-header__right">
+        <button class="post-upload-btn" id="uploadBtn" type="button">업로드</button>
+      </div>
+
+    </header>
+
+    <!-- 작성 영역 -->
+    <main class="post-write-page">
+
+      <section class="post-write-box">
+
+        <div class="post-write-profile">
+          <img
+            class="post-write-profile__img"
+            src="../assets/logo/symbol-logo.png"
+            alt="프로필 이미지"
+          >
+        </div>
+
+        <div class="post-write-content">
+          <textarea
+            id="postContent"
+            class="post-write-content__textarea"
+            placeholder="게시글 입력하기..."
+          ></textarea>
+
+          <div id="imagePreview" class="post-write-content__preview"></div>
+        </div>
+
+      </section>
+
+      <!-- 이미지 업로드 버튼 -->
+      <label class="post-write-image-btn" aria-label="이미지 업로드">
+        <img src="../assets/icons/icon-image.svg" alt="">
+        <input id="imageInput" type="file" accept="image/*" hidden>
+      </label>
+
+    </main>
+
+  </div>
+
+  <script src="../js/api.js"></script>
+
+  <script>
+    const uploadBtn = document.getElementById("uploadBtn");
+    const postContent = document.getElementById("postContent");
+    const imageInput = document.getElementById("imageInput");
+    const imagePreview = document.getElementById("imagePreview");
+
+    let uploadedImageUrl = "";
+
+    function updateUploadButtonState() {
+      const hasText = postContent.value.trim().length > 0;
+      const hasImage = uploadedImageUrl !== "";
+
+      if (hasText || hasImage) {
+        uploadBtn.classList.add("post-upload-btn--active");
+      } else {
+        uploadBtn.classList.remove("post-upload-btn--active");
+      }
+    }
+
+    postContent.addEventListener("input", updateUploadButtonState);
+
+    imageInput.addEventListener("change", async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function() {
+        imagePreview.innerHTML = `
+          <img src="${reader.result}" class="post-write-content__preview-img" alt="미리보기">
+        `;
+      };
+      reader.readAsDataURL(file);
+
+      try {
+        const uploaded = await uploadImage(file);
+        uploadedImageUrl = uploaded;
+      } catch (error) {
+        console.error(error);
+      }
+
+      updateUploadButtonState();
+    });
+
+    uploadBtn.addEventListener("click", async () => {
+      const content = postContent.value.trim();
+
+      if (!content && !uploadedImageUrl) return;
+
+      try {
+        await apiRequest("/post", {
+          method: "POST",
+          auth: true,
+          body: {
+            post: {
+              content,
+              image: uploadedImageUrl
+            }
+          }
+        });
+
+        location.href = "./home.html";
+      } catch (error) {
+        console.error(error);
+      }
+    });
+  </script>
+
+</body>
+</html>

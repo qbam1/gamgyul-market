@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>감귤마켓 | 프로필</title>
+  <link rel="stylesheet" href="../css/reset.css" />
+  <link rel="stylesheet" href="../css/common.css" />
+  <link rel="stylesheet" href="../css/page.css" />
+</head>
+<body class="page">
+  <div class="app">
+
+    <!-- 헤더 -->
+    <header class="top-header">
+      <div class="top-header__left">
+        <button class="icon-btn" type="button" onclick="history.back()" aria-label="뒤로가기">
+          <img src="../assets/icons/icon-arrow-left.svg" alt="">
+        </button>
+      </div>
+
+      <h1 class="top-header__title">프로필</h1>
+
+      <div class="top-header__right">
+        <button class="icon-btn" type="button" onclick="openSheet()" aria-label="더보기">
+          <img src="../assets/icons/icon-more-vertical.svg" alt="">
+        </button>
+      </div>
+    </header>
+
+    <main class="content profile">
+
+      <!-- 프로필 상단 -->
+      <section class="profile__top">
+        <img class="profile__avatar-img" id="avatarImg" alt="프로필 이미지" />
+
+        <p class="profile__name" id="username">-</p>
+        <p class="profile__id" id="accountname">@ -</p>
+
+        <div class="profile__follow">
+          <div>
+            <p class="profile__count" id="followerCount">0</p>
+            <p class="profile__label">followers</p>
+          </div>
+          <div>
+            <p class="profile__count" id="followingCount">0</p>
+            <p class="profile__label">followings</p>
+          </div>
+        </div>
+
+        <!-- 내 프로필 기준 -->
+        <div class="profile__my-actions">
+          <button class="btn btn--disabled" type="button" onclick="location.href='./profile-edit.html'">
+            프로필 수정
+          </button>
+          <button class="btn btn--primary" type="button" onclick="location.href='./product-add.html'">
+            상품 등록
+          </button>
+        </div>
+
+        <p class="profile__intro" id="intro">-</p>
+      </section>
+
+      <!-- 상품 섹션 -->
+      <section class="profile__product" id="productSection">
+        <h2 class="section-title">판매 중인 상품</h2>
+        <div class="product-row" id="productRow"></div>
+      </section>
+
+      <!-- 게시글 섹션 -->
+      <section class="profile__posts">
+        <div class="posts-header">
+          <button class="posts-toggle posts-toggle--active" id="btnList" type="button" onclick="setList()">
+            목록형
+          </button>
+          <button class="posts-toggle" id="btnGrid" type="button" onclick="setGrid()">
+            앨범형
+          </button>
+        </div>
+
+        <div class="posts-list" id="postsList"></div>
+      </section>
+
+      <small class="helper" id="errMsg" style="display:none; margin: 10px 16px;"></small>
+    </main>
+
+    <!-- 하단 탭 -->
+    <nav class="tabbar" aria-label="하단 탭 메뉴">
+      <a class="tabbar__item" href="./home.html" aria-label="홈">
+        <img src="../assets/icons/icon-home.svg" alt="">
+        <span>홈</span>
+      </a>
+
+      <a class="tabbar__item" href="./chat-list.html" aria-label="채팅">
+        <img src="../assets/icons/icon-message-circle.svg" alt="">
+        <span>채팅</span>
+      </a>
+
+      <a class="tabbar__item tabbar__item--plus" href="./post-add.html" aria-label="게시글 작성">
+        <img src="../assets/icons/icon-edit.svg" alt="">
+      </a>
+
+      <a class="tabbar__item tabbar__item--active" href="./profile.html" aria-label="프로필">
+        <img src="../assets/icons/icon-user-fill.svg" alt="">
+        <span>프로필</span>
+      </a>
+    </nav>
+
+    <!-- 설정 바텀시트 -->
+    <div class="sheet hidden" id="sheet">
+      <div class="sheet__dim" onclick="closeSheet()"></div>
+      <div class="sheet__panel">
+        <button class="sheet__btn" type="button">설정 및 개인정보</button>
+        <button class="sheet__btn sheet__btn--danger" type="button" id="logoutBtn">로그아웃</button>
+        <button class="sheet__btn" type="button" onclick="closeSheet()">취소</button>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="../js/api.js"></script>
+
+  <script>
+    const avatarImg = document.getElementById("avatarImg");
+    const usernameEl = document.getElementById("username");
+    const accountnameEl = document.getElementById("accountname");
+    const introEl = document.getElementById("intro");
+    const followerCountEl = document.getElementById("followerCount");
+    const followingCountEl = document.getElementById("followingCount");
+
+    const productSection = document.getElementById("productSection");
+    const productRow = document.getElementById("productRow");
+
+    const postsList = document.getElementById("postsList");
+    const btnList = document.getElementById("btnList");
+    const btnGrid = document.getElementById("btnGrid");
+
+    const errMsg = document.getElementById("errMsg");
+
+    let myAccountname = "";
+    let mode = "list";
+
+    function showError(msg){
+      errMsg.style.display = "block";
+      errMsg.textContent = msg;
+    }
+
+    function setList(){
+      mode = "list";
+      postsList.classList.remove("grid");
+      btnList.classList.add("posts-toggle--active");
+      btnGrid.classList.remove("posts-toggle--active");
+    }
+
+    function setGrid(){
+      mode = "grid";
+      postsList.classList.add("grid");
+      btnGrid.classList.add("posts-toggle--active");
+      btnList.classList.remove("posts-toggle--active");
+    }
+
+    function openSheet(){
+      document.getElementById("sheet").classList.remove("hidden");
+    }
+
+    function closeSheet(){
+      document.getElementById("sheet").classList.add("hidden");
+    }
+
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      if (typeof clearToken === "function") {
+        clearToken();
+      } else {
+        localStorage.removeItem("token");
+      }
+      closeSheet();
+      location.replace("./login.html");
+    });
+
+    async function loadMyProfile(){
+      const me = await apiRequest("/user/myinfo", { method: "GET", auth: true });
+      const user = me.user;
+
+      myAccountname = user.accountname;
+
+      avatarImg.src = user.image || "https://via.placeholder.com/110x110?text=+";
+      usernameEl.textContent = user.username || "-";
+      accountnameEl.textContent = "@ " + (user.accountname || "-");
+      introEl.textContent = user.intro || "";
+
+      followerCountEl.textContent = user.followerCount ?? 0;
+      followingCountEl.textContent = user.followingCount ?? 0;
+    }
+
+    async function loadMyProducts(){
+      const data = await apiRequest(`/product/${myAccountname}`, { method: "GET", auth: true });
+      const products = data.product || [];
+
+      if (!products.length){
+        productSection.style.display = "none";
+        return;
+      }
+
+      productSection.style.display = "block";
+      productRow.innerHTML = products.map(p => `
+        <a class="product-card" href="${p.link}" target="_blank" rel="noopener noreferrer">
+          <img class="product-card__img2" src="${p.itemImage}" alt="${p.itemName}" />
+          <p class="product-card__name">${p.itemName}</p>
+          <p class="product-card__price">${Number(p.price).toLocaleString('ko-KR')}원</p>
+        </a>
+      `).join("");
+    }
+
+    async function loadMyPosts(){
+      const data = await apiRequest(`/post/${myAccountname}/userpost`, { method: "GET", auth: true });
+      const posts = data.post || [];
+
+      if (!posts.length){
+        postsList.innerHTML = `<p class="empty-post">게시글이 없습니다.</p>`;
+        return;
+      }
+
+      postsList.innerHTML = posts.map(p => {
+        const img = (p.image && !String(p.image).includes("undefined"))
+          ? `<img class="post__img2" src="${p.image}" alt="게시글 이미지" />`
+          : "";
+
+        return `
+          <article class="post" onclick="location.href='./post-detail.html?id=${p.id}'" style="cursor:pointer;">
+            <p class="post__text">${p.content || ""}</p>
+            ${img}
+          </article>
+        `;
+      }).join("");
+    }
+
+    async function init(){
+      try{
+        await loadMyProfile();
+        await loadMyProducts();
+        await loadMyPosts();
+        setList();
+      } catch(err){
+        console.error("PROFILE LOAD ERROR:", err);
+        showError(err.message || "프로필을 불러오지 못했습니다.");
+      }
+    }
+
+    init();
+  </script>
+
+</body>
+</html>

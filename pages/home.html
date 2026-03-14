@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>감귤마켓 | 홈</title>
+  <link rel="stylesheet" href="../css/reset.css" />
+  <link rel="stylesheet" href="../css/common.css" />
+  <link rel="stylesheet" href="../css/page.css" />
+</head>
+<body class="page">
+  <div class="app">
+    <!-- 상단 헤더 -->
+   <header class="top-header">
+
+  <div class="top-header__left"></div>
+
+  <h1 class="top-header__title">감귤마켓</h1>
+
+  <div class="top-header__right">
+    <button class="icon-btn" type="button" onclick="location.href='./search.html'">
+      <img src="../assets/icons/icon-search.svg" alt="검색">
+    </button>
+
+    <button class="icon-btn" type="button" onclick="openSheet()">
+      <img src="../assets/icons/icon-more-vertical.svg" alt="메뉴">
+    </button>
+  </div>
+
+</header>
+
+    <!-- 본문 -->
+    <main class="content content--feed">
+      <!-- ✅ 빈 피드 (팔로우 없을 때) -->
+      <section class="empty" id="emptyState">
+        <div class="empty__icon">🍊</div>
+        <p class="empty__text">유저를 검색해 팔로우 해보세요!</p>
+        <button class="btn btn--primary empty__btn" type="button" onclick="location.href='./search.html'">
+          검색하기
+        </button>
+      </section>
+
+      <!-- ✅ 피드 리스트 (샘플) -->
+      <section class="feed hidden" id="feedList" aria-label="피드 목록">
+        <article class="post">
+          <div class="post__head">
+            <div class="post__avatar"></div>
+            <div class="post__meta">
+              <p class="post__name">weniv_Mandarin</p>
+              <p class="post__id">@ weniv_Mandarin</p>
+            </div>
+            <button class="icon-btn post__more" type="button" onclick="openPostSheet()">⋯</button>
+          </div>
+
+          <p class="post__text">오늘도 감귤이 반짝반짝! 🍊✨</p>
+
+          <div class="post__img"></div>
+
+          <div class="post__actions">
+            <button class="mini-btn" type="button" onclick="toggleLike(this)">♡</button>
+            <button class="mini-btn" type="button" onclick="location.href='./comment.html'">💬</button>
+            <button class="mini-btn" type="button">⤴</button>
+          </div>
+          <p class="post__date">2020년 10월 21일</p>
+        </article>
+      </section>
+        </main>
+
+   <!-- 하단 탭 (Figma 아이콘 탭) -->
+<nav class="tabbar" aria-label="하단 탭 메뉴">
+  <a class="tabbar__item tabbar__item--active" href="./home.html" aria-label="홈">
+    <img src="../assets/icons/icon-home-fill.svg" alt="">
+    <span>홈</span>
+  </a>
+
+  <a class="tabbar__item" href="./chat-list.html" aria-label="채팅">
+    <img src="../assets/icons/icon-message-circle.svg" alt="">
+    <span>채팅</span>
+  </a>
+
+  <a class="tabbar__item tabbar__item--plus" href="./post-add.html" aria-label="게시글 작성">
+    <img src="../assets/icons/icon-edit.svg" alt="">
+  </a>
+
+  <a class="tabbar__item" href="./profile.html" aria-label="프로필">
+    <img src="../assets/icons/icon-user.svg" alt="">
+    <span>프로필</span>
+  </a>
+</nav>
+
+    <!-- 바텀시트(설정/로그아웃) -->
+    <div class="sheet hidden" id="sheet">
+      <div class="sheet__dim" onclick="closeSheet()"></div>
+      <div class="sheet__panel">
+        <button class="sheet__btn" type="button">설정 및 개인정보</button>
+
+        <!-- ✅ 로그아웃 동작 연결 -->
+        <button class="sheet__btn sheet__btn--danger" type="button" id="logoutBtn">로그아웃</button>
+
+        <button class="sheet__btn" type="button" onclick="closeSheet()">취소</button>
+      </div>
+    </div>
+
+    <!-- 바텀시트(게시글 더보기) -->
+    <div class="sheet hidden" id="postSheet">
+      <div class="sheet__dim" onclick="closePostSheet()"></div>
+      <div class="sheet__panel">
+        <button class="sheet__btn sheet__btn--danger" type="button">신고하기</button>
+        <button class="sheet__btn" type="button" onclick="closePostSheet()">취소</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ✅ API 사용(토큰/로그아웃) -->
+  <script src="../js/api.js"></script>
+
+  <script>
+    // 🔥 완성 모드: 토큰 체크 일단 제거 (완성 우선)
+    // if (!getToken()) {
+    //   location.replace("./login-email.html");
+    // }
+
+    const emptyState = document.getElementById('emptyState');
+    const feedList = document.getElementById('feedList');
+
+    // ✅ 로그아웃 동작 (토큰 삭제 + 로그인으로)
+    const logoutBtn = document.getElementById("logoutBtn");
+    if (logoutBtn) {
+      logoutBtn.addEventListener("click", () => {
+        // api.js에 removeToken()이 있으면 그걸 쓰고, 없으면 localStorage 직접 삭제
+        if (typeof removeToken === "function") {
+          removeToken();
+        } else {
+          localStorage.removeItem("token");
+        }
+        location.href = "./login.html";
+      });
+    }
+
+    async function loadFeed() {
+      try {
+        const data = await apiRequest("/post/feed", {
+          method: "GET",
+          auth: true
+        });
+
+        const posts = data.posts || [];
+
+        if (posts.length === 0) {
+          emptyState.classList.remove('hidden');
+          feedList.classList.add('hidden');
+          return;
+        }
+
+        emptyState.classList.add('hidden');
+        feedList.classList.remove('hidden');
+
+        feedList.innerHTML = posts.map(post => `
+          <article class="post">
+            <div class="post__head">
+              <div class="post__avatar"></div>
+              <div class="post__meta">
+                <p class="post__name">${post.author.username}</p>
+                <p class="post__id">@ ${post.author.accountname}</p>
+              </div>
+            </div>
+            <p class="post__text">${post.content}</p>
+            ${post.image ? `<img src="${post.image}" class="post__img" alt="" />` : ""}
+          </article>
+        `).join("");
+
+      } catch (err) {
+        console.error("FEED LOAD ERROR:", err);
+      }
+    }
+
+    loadFeed();
+  </script>
+</body>
+</html>

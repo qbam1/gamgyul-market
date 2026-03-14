@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>채팅방</title>
+
+<link rel="stylesheet" href="../css/reset.css">
+<link rel="stylesheet" href="../css/common.css">
+<link rel="stylesheet" href="../css/page.css">
+
+</head>
+
+<body class="page">
+
+<div class="app">
+
+<!-- 헤더 -->
+<header class="top-header">
+
+<div class="top-header__left">
+<button class="icon-btn" onclick="history.back()" aria-label="뒤로가기">
+<img src="../assets/icons/icon-arrow-left.svg">
+</button>
+</div>
+
+<h1 class="top-header__title">
+애월읍 위니브 감귤농장
+</h1>
+
+<div class="top-header__right">
+<button class="icon-btn" aria-label="메뉴">
+<img src="../assets/icons/icon-more-vertical.svg">
+</button>
+</div>
+
+</header>
+
+
+<!-- 채팅 영역 -->
+<main class="chat-room">
+
+<div class="chat-date">
+2020년 10월 25일
+</div>
+
+
+<!-- 상대 메시지 -->
+<div class="chat-message chat-message--other">
+
+<img
+class="chat-avatar"
+src="../assets/logo/symbol-logo.png"
+>
+
+<div class="chat-bubble">
+이번에 정정 언제하맨 마씸?
+</div>
+
+<span class="chat-time">12:39</span>
+
+</div>
+
+
+<!-- 내 메시지 -->
+<div class="chat-message chat-message--me">
+
+<div class="chat-bubble chat-bubble--me">
+내일 아침에 바로 보내겠습니다 🍊
+</div>
+
+<span class="chat-time">12:41</span>
+
+</div>
+
+
+</main>
+
+
+<!-- 입력창 -->
+<div class="chat-input">
+
+<button class="chat-input__img">
+<img src="../assets/icons/icon-image.svg">
+</button>
+
+<input
+class="chat-input__text"
+placeholder="메시지 입력하기..."
+>
+
+<button class="chat-input__send">
+전송
+</button>
+
+</div>
+
+</div>
+
+</body>
+</html>

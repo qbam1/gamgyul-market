@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>유저 검색</title>
+
+  <link rel="stylesheet" href="../css/reset.css">
+  <link rel="stylesheet" href="../css/common.css">
+  <link rel="stylesheet" href="../css/page.css">
+</head>
+<body class="page">
+
+  <div class="app">
+
+    <!-- 헤더 -->
+    <header class="top-header">
+
+      <div class="top-header__left">
+        <button class="icon-btn" type="button" onclick="history.back()" aria-label="뒤로가기">
+          <img src="../assets/icons/icon-arrow-left.svg" alt="">
+        </button>
+      </div>
+
+      <h1 class="top-header__title">유저 검색</h1>
+
+      <div class="top-header__right"></div>
+
+    </header>
+
+    <!-- 검색 영역 -->
+    <main class="search-page">
+
+      <section class="search-box">
+        <img class="search-box__icon" src="../assets/icons/icon-search.svg" alt="">
+        <input
+          class="search-box__input"
+          type="text"
+          placeholder="계정 검색"
+        >
+      </section>
+
+      <!-- 검색 결과 -->
+      <section class="search-result-list">
+
+        <a class="search-user" href="./profile.html">
+          <img class="search-user__avatar" src="../assets/logo/symbol-logo.png" alt="">
+          <div class="search-user__content">
+            <p class="search-user__name">애월읍 <span class="search-user__highlight">위니브</span> 감귤농장</p>
+            <p class="search-user__id">@ weniv_mandarin</p>
+          </div>
+        </a>
+
+        <a class="search-user" href="./profile.html">
+          <img class="search-user__avatar" src="../assets/logo/symbol-logo.png" alt="">
+          <div class="search-user__content">
+            <p class="search-user__name">제주 한라봉마켓</p>
+            <p class="search-user__id">@ hallabong_market</p>
+          </div>
+        </a>
+
+        <a class="search-user" href="./profile.html">
+          <img class="search-user__avatar" src="../assets/logo/symbol-logo.png" alt="">
+          <div class="search-user__content">
+            <p class="search-user__name"><span class="search-user__highlight">위니브</span> 직거래 감귤</p>
+            <p class="search-user__id">@ weniv_farm</p>
+          </div>
+        </a>
+
+      </section>
+
+    </main>
+
+    <!-- 하단 탭 -->
+    <nav class="tabbar" aria-label="하단 탭 메뉴">
+      <a class="tabbar__item" href="./home.html" aria-label="홈">
+        <img src="../assets/icons/icon-home.svg" alt="">
+        <span>홈</span>
+      </a>
+
+      <a class="tabbar__item" href="./chat-list.html" aria-label="채팅">
+        <img src="../assets/icons/icon-message-circle.svg" alt="">
+        <span>채팅</span>
+      </a>
+
+      <a class="tabbar__item tabbar__item--plus" href="./post-add.html" aria-label="게시글 작성">
+        <img src="../assets/icons/icon-edit.svg" alt="">
+      </a>
+
+      <a class="tabbar__item" href="./profile.html" aria-label="프로필">
+        <img src="../assets/icons/icon-user.svg" alt="">
+        <span>프로필</span>
+      </a>
+    </nav>
+
+  </div>
+
+</body>
+</html>

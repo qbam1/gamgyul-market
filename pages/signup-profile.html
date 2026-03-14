@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>프로필 설정</title>
+
+  <link rel="stylesheet" href="../css/reset.css">
+  <link rel="stylesheet" href="../css/common.css">
+  <link rel="stylesheet" href="../css/page.css">
+</head>
+<body class="page">
+
+  <div class="app">
+
+    <!-- 헤더 -->
+    <header class="top-header">
+
+      <div class="top-header__left">
+        <button class="icon-btn" type="button" onclick="history.back()" aria-label="뒤로가기">
+          <img src="../assets/icons/icon-arrow-left.svg" alt="">
+        </button>
+      </div>
+
+      <h1 class="top-header__title">프로필 설정</h1>
+
+      <div class="top-header__right">
+        <button class="signup-profile-save-btn" id="saveBtn" type="button">저장</button>
+      </div>
+
+    </header>
+
+    <main class="signup-profile-page">
+
+      <!-- 프로필 이미지 -->
+      <section class="signup-profile-avatar">
+        <div class="signup-profile-avatar__wrap">
+          <img
+            id="previewImg"
+            class="signup-profile-avatar__img"
+            src="../assets/logo/symbol-logo.png"
+            alt="프로필 이미지"
+          >
+
+          <label class="signup-profile-avatar__label" for="profileImageInput">
+            <img src="../assets/icons/icon-image.svg" alt="">
+          </label>
+
+          <input id="profileImageInput" type="file" accept="image/*" hidden>
+        </div>
+      </section>
+
+      <!-- 입력폼 -->
+      <section class="signup-profile-form">
+
+        <div class="signup-profile-field">
+          <label class="signup-profile-label" for="usernameInput">사용자 이름</label>
+          <input id="usernameInput" class="signup-profile-input" type="text" placeholder="2~10자 이내여야 합니다.">
+          <p class="signup-profile-error" id="usernameError"></p>
+        </div>
+
+        <div class="signup-profile-field">
+          <label class="signup-profile-label" for="accountInput">계정 ID</label>
+          <input id="accountInput" class="signup-profile-input" type="text" placeholder="영문, 숫자, 밑줄 및 마침표만 사용 가능합니다.">
+          <p class="signup-profile-error" id="accountError"></p>
+        </div>
+
+        <div class="signup-profile-field">
+          <label class="signup-profile-label" for="introInput">소개</label>
+          <input id="introInput" class="signup-profile-input" type="text" placeholder="자신과 판매할 상품에 대해 소개해 주세요!">
+        </div>
+
+      </section>
+
+    </main>
+
+  </div>
+
+  <script src="../js/api.js"></script>
+
+  <script>
+    const previewImg = document.getElementById("previewImg");
+    const profileImageInput = document.getElementById("profileImageInput");
+    const usernameInput = document.getElementById("usernameInput");
+    const accountInput = document.getElementById("accountInput");
+    const introInput = document.getElementById("introInput");
+    const saveBtn = document.getElementById("saveBtn");
+
+    const usernameError = document.getElementById("usernameError");
+    const accountError = document.getElementById("accountError");
+
+    let uploadedImageUrl = "";
+    let accountCheckedOk = false;
+
+    function validateForm() {
+      let valid = true;
+
+      usernameError.textContent = "";
+
+      const username = usernameInput.value.trim();
+      const account = accountInput.value.trim();
+
+      if (username.length < 2 || username.length > 10) {
+        usernameError.textContent = "사용자 이름은 2자 이상 10자 이하로 입력해주세요.";
+        valid = false;
+      }
+
+      const accountRegex = /^[A-Za-z0-9._]+$/;
+      if (!accountRegex.test(account)) {
+        accountError.textContent = "계정 ID는 영문, 숫자, 밑줄 및 마침표만 사용할 수 있습니다.";
+        valid = false;
+      } else if (!accountCheckedOk) {
+        valid = false;
+      }
+
+      if (valid) {
+        saveBtn.classList.add("signup-profile-save-btn--active");
+      } else {
+        saveBtn.classList.remove("signup-profile-save-btn--active");
+      }
+
+      return valid;
+    }
+
+    usernameInput.addEventListener("input", validateForm);
+
+    accountInput.addEventListener("input", () => {
+      accountCheckedOk = false;
+      accountError.textContent = "";
+      validateForm();
+    });
+
+    accountInput.addEventListener("blur", async () => {
+      const account = accountInput.value.trim();
+      const accountRegex = /^[A-Za-z0-9._]+$/;
+
+      if (!accountRegex.test(account)) {
+        accountError.textContent = "계정 ID는 영문, 숫자, 밑줄 및 마침표만 사용할 수 있습니다.";
+        accountCheckedOk = false;
+        validateForm();
+        return;
+      }
+
+      try {
+        accountError.textContent = "계정 ID 확인 중...";
+
+        const res = await apiRequest("/user/accountnamevalid", {
+          method: "POST",
+          body: {
+            user: {
+              accountname: account
+            }
+          }
+        });
+
+        if (String(res?.message || "").includes("이미 가입")) {
+          accountError.textContent = "이미 사용 중인 계정 ID입니다.";
+          accountCheckedOk = false;
+        } else {
+          accountError.textContent = "";
+          accountCheckedOk = true;
+        }
+
+      } catch (error) {
+        accountError.textContent = error?.message || "계정 ID 확인 중 오류가 발생했습니다.";
+        accountCheckedOk = false;
+      }
+
+      validateForm();
+    });
+
+    profileImageInput.addEventListener("change", async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function() {
+        previewImg.src = reader.result;
+      };
+      reader.readAsDataURL(file);
+
+      try {
+        const uploaded = await uploadImage(file);
+        uploadedImageUrl = uploaded;
+      } catch (error) {
+        console.error(error);
+      }
+
+      validateForm();
+    });
+
+    saveBtn.addEventListener("click", async () => {
+      if (!validateForm()) return;
+
+      const signupEmail = sessionStorage.getItem("signup_email");
+      const signupPw = sessionStorage.getItem("signup_pw");
+
+      if (!signupEmail || !signupPw) {
+        location.href = "./signup.html";
+        return;
+      }
+
+      try {
+        await apiRequest("/user", {
+          method: "POST",
+          body: {
+            user: {
+              username: usernameInput.value.trim(),
+              email: signupEmail,
+              password: signupPw,
+              accountname: accountInput.value.trim(),
+              intro: introInput.value.trim(),
+              image: uploadedImageUrl
+            }
+          }
+        });
+
+        sessionStorage.removeItem("signup_email");
+        sessionStorage.removeItem("signup_pw");
+        sessionStorage.setItem("prefill_email", signupEmail);
+
+        location.href = "./login-email.html";
+      } catch (error) {
+        accountError.textContent = error?.message || "회원가입 중 오류가 발생했습니다.";
+      }
+    });
+
+    validateForm();
+  </script>
+
+</body>
+</html>
