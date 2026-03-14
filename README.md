@@ -4,7 +4,7 @@
 사용자는 회원가입, 로그인, 게시글 작성, 상품 등록, 프로필 확인 등의 기능을 사용할 수 있습니다.
 
 ## 배포 / 제출 링크
-- GitHub Repository: (여기에 깃허브 링크 넣기)
+- GitHub Repository: (https://github.com/qbam1/gamgyul-market)
 
 ## 프로젝트 소개
 감귤마켓은 감귤 판매와 SNS 기능을 결합한 서비스입니다.  
