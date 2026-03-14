@@ -58,3 +58,11 @@ gamgyul-market/
 │   ├── chat-list.html
 │   └── chat-room.html
 └── README.md
+
+📝 향후 개선 사항
+반응형 디자인 개선
+UI 디자인 개선
+사용자 경험 개선
+기능 확장
+👤 제작자
+김범규
